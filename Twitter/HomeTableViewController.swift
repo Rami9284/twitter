@@ -24,7 +24,7 @@ UITableViewController {
         let url = "https://api.twitter.com/1.1/statuses/home_timeline.json"
         let myparams = ["count":numberOfTweets]
         
-        TwitterAPICaller.client?.getDictionariesRequest(url: url, parameters: myparams, success: { (tweets: [NSDictionary]) in
+        TwitterAPICaller.client?.getDictionariesRequest(url: url, parameters: myparams as [String : Any], success: { (tweets: [NSDictionary]) in
             for tweet in tweets {
                // self.tweetArray.removeAll()
                 self.tweetArray.append(tweet)
@@ -33,7 +33,7 @@ UITableViewController {
                 self.myRefreshControl.endRefreshing()
             }
         }, failure: { (Error) in
-            print("Could not retrive tweets! Oh no!")
+            print("Could not retrive tweets!")
         })
     }
     
@@ -44,7 +44,7 @@ UITableViewController {
         
         let myParams = ["count": numberOfTweets]
         
-        TwitterAPICaller.client?.getDictionariesRequest(url: url, parameters: myParams, success: { (tweets: [NSDictionary]) in
+        TwitterAPICaller.client?.getDictionariesRequest(url: url, parameters: myParams as [String : Any], success: { (tweets: [NSDictionary]) in
             for tweet in tweets {
                 // self.tweetArray.removeAll()
                 self.tweetArray.append(tweet)
@@ -76,6 +76,12 @@ UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+    
+   override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+       // self.loadtweet()
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
         
@@ -91,6 +97,9 @@ UITableViewController {
             cell.pictureView.image = UIImage(data: imageData)
             //cell.provideImageData.image = UIImage(data: imageData)
         }
+        
+        cell.set_favorited(isFavorited: tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetID = tweetArray[indexPath.row]["id"] as! Int
         
         return cell
     }
@@ -113,6 +122,8 @@ UITableViewController {
         
         UserDefaults.standard.set(false, forKey: "userLoggedIn")
     }
+    
+ 
     
 
 }
