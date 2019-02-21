@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetViewController: UIViewController {
+class TweetViewController: UIViewController, UITextViewDelegate {
 
     
     @IBOutlet weak var tweetTextView: UITextView!
@@ -19,8 +19,26 @@ class TweetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tweetTextView.becomeFirstResponder()
+        tweetTextView.delegate = self
+        tweetTextView.text = "Go ahead, type a post"
+        //tweetTextView.becomeFirstResponder()
+        tweetTextView.textColor = UIColor.lightGray
+        tweetTextView.layer.cornerRadius = 10
         // Do any additional setup after loading the view.
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if tweetTextView.textColor == UIColor.lightGray{
+            tweetTextView.text = nil
+            tweetTextView.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if tweetTextView.text.isEmpty{
+            tweetTextView.text = "Go ahead, type a post"
+            tweetTextView.textColor = UIColor.gray
+        }
     }
     
 
